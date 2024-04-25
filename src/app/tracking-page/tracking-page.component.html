@@ -1,0 +1,32 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div class="relative py-3 sm:max-w-full sm:mx-auto">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+        </div>
+        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="w-full mx-auto">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button class=" bg-transparent text-cyan-400 font-bold rounded"
+                            routerLink="/home">&#8592;</button>
+                        <h1 class="text-2xl font-semibold ml-4">Budget Tracker</h1>
+                    </div>
+                    <!-- Add Your Balance component here -->
+                    <app-balance></app-balance>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                        <div class="flex space-x-4">
+                            <div class="w-1/2">
+                                <app-add (newItemEvent)="incomeExpenseList.addItem($event)"></app-add>
+                            </div>
+                            <div class="w-1/2">
+                                <app-income-expense-list #incomeExpenseList></app-income-expense-list>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
