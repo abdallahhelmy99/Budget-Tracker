@@ -1,6 +1,5 @@
-// balance.component.ts
-import { Component, OnInit } from '@angular/core';
-import { FinanceService } from '../../services/finance.service';
+import { Component, OnInit, Input } from '@angular/core';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-balance',
@@ -8,16 +7,18 @@ import { FinanceService } from '../../services/finance.service';
   styleUrls: ['./balance.component.css'],
 })
 export class BalanceComponent implements OnInit {
-  balance: number = 0; // Initialize balance to 0
+  @Input() balance: number = 0; // Initialize balance to 0
 
-  constructor(private financeService: FinanceService) {}
+  constructor(private firebaseService: FirebaseService) {}
 
-  ngOnInit() {
-    this.financeService.currentBalance.subscribe((balance) => {
-      if (balance !== null) {
-        // Check if balance is not null
-        this.balance = balance;
-      }
-    });
+  ngOnInit() {}
+
+  updateBalance(userInput: number) {
+    const userId = sessionStorage.getItem('userid');
+    if (userId) {
+      this.firebaseService.updateUserBalance(parseInt(userId), userInput);
+    } else {
+      console.error('No user ID found in session storage');
+    }
   }
 }

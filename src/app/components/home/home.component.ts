@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserDataService } from '../../services/userdata.service';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -9,17 +9,21 @@ import { UserDataService } from '../../services/userdata.service';
 export class HomeComponent {
   currentUser: any;
 
-  constructor(private userDataService: UserDataService) {}
+  constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
-    this.userDataService.currentUser.subscribe(
-      (user) => {
-        this.currentUser = user;
-        console.log(this.currentUser);
-      },
-      (error) => {
-        console.error('Error in currentUser Observable:', error);
+    if (sessionStorage) {
+      const userId = sessionStorage.getItem('userid');
+      if (userId) {
+        this.firebaseService.getUserById(+userId).subscribe(
+          (user) => {
+            this.currentUser = user;
+          },
+          (error) => {
+            console.error('Error in getting user:', error);
+          }
+        );
       }
-    );
+    }
   }
 }
