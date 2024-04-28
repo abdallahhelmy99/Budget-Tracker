@@ -1,7 +1,7 @@
-export interface UserModel {
-  userid: number;
-  name: string;
-  username: string;
-  password: string;
+export interface User {
+  userid: string;
+  fname: string;
+  lname: string;
+  email: string;
   balance: number;
 }

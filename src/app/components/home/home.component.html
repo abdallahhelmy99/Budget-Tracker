@@ -6,7 +6,7 @@
         <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
             <div class="max-w-md mx-auto">
                 <div>
-                    <h1 class="text-2xl font-semibold">Welcome, {{ currentUser?.name }} </h1>
+                    <h1 class="text-2xl font-semibold">Welcome, {{ currentUser?.fname }} </h1>
                     <h2 class="text-2xl font-semibold">Budget Tracker</h2>
                 </div>
                 <div class="divide-y divide-gray-200">
@@ -49,6 +49,9 @@
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700">
                             <a routerLink="/dashboard">Dashboard <span aria-hidden="true">&rarr;</span></a>
+                        </p>
+                        <p class="text-cyan-600 hover:text-cyan-700 cursor-pointer" (click)="logout()">
+                            <a>Logout <span aria-hidden="true">&larr;</span></a>
                         </p>
                     </div>
                 </div>

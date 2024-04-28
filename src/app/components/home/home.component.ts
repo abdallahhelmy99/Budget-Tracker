@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { FirebaseService } from '../../services/firebase.service';
+import { User } from '../../models/UserModel/user.model';
 
 @Component({
   selector: 'app-home',
@@ -12,18 +14,13 @@ export class HomeComponent {
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit() {
-    if (sessionStorage) {
-      const userId = sessionStorage.getItem('userid');
-      if (userId) {
-        this.firebaseService.getUserById(+userId).subscribe(
-          (user) => {
-            this.currentUser = user;
-          },
-          (error) => {
-            console.error('Error in getting user:', error);
-          }
-        );
-      }
-    }
+    this.firebaseService.getUserData().then((user) => {
+      this.currentUser = user;
+    });
+  }
+
+  logout() {
+    this.firebaseService.logout();
+    window.location.href = '/';
   }
 }
