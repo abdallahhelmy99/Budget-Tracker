@@ -13,12 +13,5 @@ export class BalanceComponent implements OnInit {
 
   ngOnInit() {}
 
-  updateBalance(userInput: number) {
-    const userId = sessionStorage.getItem('userid');
-    if (userId) {
-      this.firebaseService.updateUserBalance(userInput);
-    } else {
-      console.error('No user ID found in session storage');
-    }
-  }
+  updateBalance(userInput: number) {}
 }
