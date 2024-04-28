@@ -80,7 +80,7 @@ export class FirebaseService {
       const user$ = this.db.object(`users/${uid}`).valueChanges().pipe(take(1));
       return firstValueFrom(user$);
     } else {
-      throw new Error('No user ID found in session storage');
+      return null;
     }
   }
 
@@ -101,7 +101,7 @@ export class FirebaseService {
         );
       return firstValueFrom(user$);
     } else {
-      throw new Error('No user ID found in session storage');
+      return 0;
     }
   }
 
@@ -113,8 +113,7 @@ export class FirebaseService {
     const userId = this.sessionService.get('uid');
     if (userId) {
       this.db.object(`users/${userId}`).update({ balance: newBalance });
-    } else {
-      throw new Error('No user ID found in session storage');
     }
+    return 0;
   }
 }
