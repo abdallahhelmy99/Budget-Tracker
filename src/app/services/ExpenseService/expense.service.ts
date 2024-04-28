@@ -26,9 +26,11 @@ export class ExpenseService {
    * @param expenseId - The ID of the expense to retrieve.
    * @returns The expense with the specified ID.
    */
-  async getExpense(expenseId: string) {
-    const expense$ = this.db.object(`expenses/${expenseId}`).valueChanges();
-    return firstValueFrom(expense$);
+  async getExpense(userId: string) {
+    const expenses$ = this.db
+      .list(`expenses`, (ref) => ref.orderByChild('userId').equalTo(userId))
+      .valueChanges();
+    return firstValueFrom(expenses$);
   }
 
   /**

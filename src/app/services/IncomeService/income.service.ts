@@ -26,9 +26,11 @@ export class IncomeService {
    * @param incomeId - The ID of the income to retrieve.
    * @returns The income with the specified ID.
    */
-  async getIncome(incomeId: string) {
-    const income$ = this.db.object(`incomes/${incomeId}`).valueChanges();
-    return firstValueFrom(income$);
+  async getIncome(userId: string) {
+    const incomes$ = this.db
+      .list(`incomes`, (ref) => ref.orderByChild('userId').equalTo(userId))
+      .valueChanges();
+    return firstValueFrom(incomes$);
   }
 
   /**
