@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  username = '';
+  email = '';
   password = '';
 
   constructor(
@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
 
   async login() {
     try {
-      await this.authService.login(this.username, this.password);
+      await this.authService.login(this.email, this.password);
       this.snackBar.open('Login successful', 'Close', { duration: 3000 });
       this.router.navigate(['/home']);
     } catch (error) {

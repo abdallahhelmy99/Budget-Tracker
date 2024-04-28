@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from '../../models/UserModel/user.model';
-import { SessionService } from '../SessionStorageService/session.service';
+import { SessionStorageService } from '../SessionStorageService/session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,7 @@ import { SessionService } from '../SessionStorageService/session.service';
 export class AuthService {
   constructor(
     private auth: AngularFireAuth,
-    private sessionService: SessionService
+    private sessionService: SessionStorageService
   ) {}
 
   async signup(newUser: any) {
