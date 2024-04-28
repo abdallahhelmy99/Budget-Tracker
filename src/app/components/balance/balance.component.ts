@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FirebaseService } from '../../services/firebase.service';
+import { AuthService } from '../../services/AuthService/auth.service';
 
 @Component({
   selector: 'app-balance',
@@ -9,7 +9,7 @@ import { FirebaseService } from '../../services/firebase.service';
 export class BalanceComponent implements OnInit {
   @Input() balance: number = 0; // Initialize balance to 0
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {}
 

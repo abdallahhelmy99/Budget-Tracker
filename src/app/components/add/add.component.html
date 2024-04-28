@@ -4,8 +4,7 @@
         <label class="block text-grey-darker text-sm font-bold mb-2" for="type">
             Type
         </label>
-        <select [(ngModel)]="type" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-            id="type">
+        <select [(ngModel)]="type" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker">
             <option>Expense</option>
             <option>Income</option>
         </select>
@@ -17,16 +16,29 @@
         <input [(ngModel)]="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
             id="name" type="text" placeholder="Name">
     </div>
-    <div class="mb-6">
+    <div class="mb-4">
         <label class="block text-grey-darker text-sm font-bold mb-2" for="amount">
             Amount
         </label>
         <input [(ngModel)]="amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
             id="amount" type="number" placeholder="Amount">
     </div>
+    <div class="mb-4" *ngIf="type === 'Expense'">
+        <label class="block text-grey-darker text-sm font-bold mb-2" for="description">
+            Description
+        </label>
+        <input [(ngModel)]="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
+            id="description" type="text" placeholder="Description">
+    </div>
+    <div class="mb-4" *ngIf="type === 'Income'">
+        <label class="block text-grey-darker text-sm font-bold mb-2" for="source">
+            Source
+        </label>
+        <input [(ngModel)]="source" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
+            id="source" type="text" placeholder="Source">
+    </div>
     <div class="flex items-center justify-between">
-        <button (click)="addItem()" class="bg-cyan-400 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
-            type="button">
+        <button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" (click)="addItem()">
             Add
         </button>
     </div>

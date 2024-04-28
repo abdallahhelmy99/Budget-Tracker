@@ -22,7 +22,6 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SessionService } from './services/session.service';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyApLtsOeQvx2_HdGvsw4jY1GqIb5ufHb90',

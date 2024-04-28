@@ -1,6 +1,6 @@
 // login.component.ts
 import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from '../../services/firebase.service';
+import { AuthService } from '../../services/AuthService/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -10,20 +10,20 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  username = '';
+  email = '';
   password = '';
 
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
-    private firebaseService: FirebaseService
+    private authService: AuthService
   ) {}
 
   ngOnInit() {}
 
   async login() {
     try {
-      await this.firebaseService.login(this.username, this.password);
+      await this.authService.login(this.email, this.password);
       this.snackBar.open('Login successful', 'Close', { duration: 3000 });
       this.router.navigate(['/home']);
     } catch (error) {

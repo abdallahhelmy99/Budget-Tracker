@@ -6,8 +6,8 @@
         <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
             <div class="max-w-md mx-auto">
                 <div>
-                    <h1 class="text-2xl font-semibold">Welcome, {{ currentUser?.fname }} </h1>
                     <h2 class="text-2xl font-semibold">Budget Tracker</h2>
+                    <h1 class="text-xl font-thin">Welcome, {{ currentUser?.fname }} </h1>
                 </div>
                 <div class="divide-y divide-gray-200">
                     <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
@@ -45,13 +45,13 @@
                             Want to dive in?
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700">
-                            <a routerLink="/tracking">Start tracking <span aria-hidden="true">&rarr;</span></a>
+                            <a routerLink="/tracking">Track Your Budget <span aria-hidden="true">&rarr;</span></a>
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700">
                             <a routerLink="/dashboard">Dashboard <span aria-hidden="true">&rarr;</span></a>
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700">
-                            <a>Reports (Not Implemented Yet) <span aria-hidden="true">&rarr;</span></a>
+                            <a>Saving Goals (Not Implemented) <span aria-hidden="true">&rarr;</span></a>
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700 cursor-pointer" (click)="logout()">
                             <a>Logout <span aria-hidden="true">&larr;</span></a>

@@ -1,6 +1,6 @@
 // register.component.ts
 import { Component } from '@angular/core';
-import { FirebaseService } from '../../services/firebase.service';
+import { AuthService } from '../../services/AuthService/auth.service';
 import { uid } from 'chart.js/dist/helpers/helpers.core';
 
 @Component({
@@ -17,12 +17,12 @@ export class RegisterComponent {
     password: '',
   };
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {}
 
   register() {
-    this.firebaseService.signup(this.newUser).then(
+    this.authService.signup(this.newUser).then(
       (user) => {
         console.log('User registered:', user);
       },

@@ -1,57 +1,41 @@
+// tracking-page.component.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FirebaseService } from '../../services/firebase.service';
+import { UserService } from '../../services/UserService/user.service';
+import { SessionStorageService } from '../../services/SessionStorageService/session.service';
+import { BudgetService } from '../../services/BudgetService/budget.service';
+import { Budget } from '../../models/BudgetModel/budget.model';
 
 @Component({
   selector: 'app-tracking-page',
   templateUrl: './tracking-page.component.html',
-  styleUrl: './tracking-page.component.css',
+  styleUrls: ['./tracking-page.component.css'],
 })
 export class TrackingPageComponent {
   currentUser: any;
+  budget: Budget = {
+    budgetId: '',
+    name: '',
+    amount: 0,
+    start_date: '',
+    end_date: '',
+    remaining_amount: 0,
+  };
   @Output() newItemEvent = new EventEmitter<{
     type: string;
     name: string;
     amount: number;
   }>();
 
-  type = 'Expense';
-  name = '';
-  amount = 0;
-
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(
+    private budgetService: BudgetService,
+    private userService: UserService,
+    private sessionstorageService: SessionStorageService
+  ) {}
 
   ngOnInit() {
-    this.firebaseService.getUserData().then((user) => {
-      this.currentUser = user;
+    const userid = this.sessionstorageService.getUid();
+    this.budgetService.getBudget(userid!).then((budget) => {
+      this.budget = budget as Budget;
     });
-  }
-
-  async addItem() {
-    const newItem = {
-      type: this.type,
-      name: this.name,
-      amount: this.amount,
-    };
-
-    this.newItemEvent.emit(newItem);
-
-    try {
-      // Get the current balance from the firebaseService
-      const currentBalance = await this.firebaseService.getUserBalance();
-
-      // Calculate the new balance based on the type of the item
-      const newBalance =
-        this.type.toLowerCase() === 'expense'
-          ? currentBalance - this.amount
-          : currentBalance + this.amount;
-
-      // Update the balance in Firebase
-      await this.firebaseService.updateUserBalance(newBalance);
-
-      this.name = '';
-      this.amount = 0;
-    } catch (error) {
-      console.error('Failed to update balance:', error);
-    }
   }
 }

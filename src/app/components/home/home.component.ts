@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { FirebaseService } from '../../services/firebase.service';
-import { User } from '../../models/UserModel/user.model';
+import { UserService } from '../../services/UserService/user.service';
+import { AuthService } from '../../services/AuthService/auth.service';
+import { SessionStorageService } from '../../services/SessionStorageService/session.service';
 
 @Component({
   selector: 'app-home',
@@ -11,16 +11,21 @@ import { User } from '../../models/UserModel/user.model';
 export class HomeComponent {
   currentUser: any;
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private sessionStorageService: SessionStorageService
+  ) {}
 
   ngOnInit() {
-    this.firebaseService.getUserData().then((user) => {
+    const userid = this.sessionStorageService.getUid();
+    this.userService.getUser(userid!).then((user) => {
       this.currentUser = user;
     });
   }
 
   logout() {
-    this.firebaseService.logout();
+    this.authService.logout();
     window.location.href = '/';
   }
 }
