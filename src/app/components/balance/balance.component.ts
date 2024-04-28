@@ -16,7 +16,7 @@ export class BalanceComponent implements OnInit {
   updateBalance(userInput: number) {
     const userId = sessionStorage.getItem('userid');
     if (userId) {
-      this.firebaseService.updateUserBalance(parseInt(userId), userInput);
+      this.firebaseService.updateUserBalance(userInput);
     } else {
       console.error('No user ID found in session storage');
     }

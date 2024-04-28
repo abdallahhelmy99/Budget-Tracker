@@ -17,11 +17,13 @@ export class RegisterComponent {
   ngOnInit() {}
 
   register() {
-    this.firebaseService
-      .register(this.name, this.username, this.password)
-      .subscribe(() => {
-        alert('User registered');
-        window.location.href = '/';
-      });
+    this.firebaseService.signup(this.username, this.password).then(
+      (user) => {
+        console.log('User registered:', user);
+      },
+      (error) => {
+        console.error('Error in registration:', error);
+      }
+    );
   }
 }
