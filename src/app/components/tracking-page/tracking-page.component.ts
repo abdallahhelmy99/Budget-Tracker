@@ -35,19 +35,23 @@ export class TrackingPageComponent {
 
     this.newItemEvent.emit(newItem);
 
-    // Get the current balance from the firebaseService
-    const currentBalance = await this.firebaseService.getUserBalance();
+    try {
+      // Get the current balance from the firebaseService
+      const currentBalance = await this.firebaseService.getUserBalance();
 
-    // Calculate the new balance based on the type of the item
-    const newBalance =
-      this.type.toLowerCase() === 'expense'
-        ? currentBalance - this.amount
-        : currentBalance + this.amount;
+      // Calculate the new balance based on the type of the item
+      const newBalance =
+        this.type.toLowerCase() === 'expense'
+          ? currentBalance - this.amount
+          : currentBalance + this.amount;
 
-    // Update the balance in Firebase
-    await this.firebaseService.updateUserBalance(newBalance);
+      // Update the balance in Firebase
+      await this.firebaseService.updateUserBalance(newBalance);
 
-    this.name = '';
-    this.amount = 0;
+      this.name = '';
+      this.amount = 0;
+    } catch (error) {
+      console.error('Failed to update balance:', error);
+    }
   }
 }
