@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FirebaseService } from '../../services/firebase.service';
+import { UserService } from '../../services/UserService/user.service';
+import { SessionStorageService } from '../../services/SessionStorageService/session.service';
 
 @Component({
   selector: 'app-tracking-page',
@@ -18,40 +19,43 @@ export class TrackingPageComponent {
   name = '';
   amount = 0;
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(
+    private userService: UserService,
+    private sessionstorageService: SessionStorageService
+  ) {}
 
   ngOnInit() {
-    this.firebaseService.getUserData().then((user) => {
+    const userid = this.sessionstorageService.get('uid');
+    this.userService.getUser(userid!).then((user) => {
       this.currentUser = user;
     });
   }
 
-  async addItem() {
-    const newItem = {
-      type: this.type,
-      name: this.name,
-      amount: this.amount,
-    };
+  // async addItem() {
+  //   const newItem = {
+  //     type: this.type,
+  //     name: this.name,
+  //     amount: this.amount,
+  //   };
 
-    this.newItemEvent.emit(newItem);
+  //   this.newItemEvent.emit(newItem);
 
-    try {
-      // Get the current balance from the firebaseService
-      const currentBalance = await this.firebaseService.getUserBalance();
+  //   try {
+  //     // Get the current balance from the authService
+  //     const currentBalance = await this.authService.getUserBalance();
 
-      // Calculate the new balance based on the type of the item
-      const newBalance =
-        this.type.toLowerCase() === 'expense'
-          ? currentBalance - this.amount
-          : currentBalance + this.amount;
+  //     // Calculate the new balance based on the type of the item
+  //     const newBalance =
+  //       this.type.toLowerCase() === 'expense'
+  //         ? currentBalance - this.amount
+  //         : currentBalance + this.amount;
 
-      // Update the balance in Firebase
-      await this.firebaseService.updateUserBalance(newBalance);
+  //     // Update the balance in Firebase
+  //     await this.authService.updateUserBalance(newBalance);
 
-      this.name = '';
-      this.amount = 0;
-    } catch (error) {
-      console.error('Failed to update balance:', error);
-    }
-  }
+  //     this.name = '';
+  //     this.amount = 0;
+  //   } catch (error) {
+  //     console.error('Failed to update balance:', error);
+  //   }
 }

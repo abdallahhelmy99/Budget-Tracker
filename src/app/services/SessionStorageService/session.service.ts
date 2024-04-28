@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class SessionService {
+export class SessionStorageService {
   /**
    * Saves a value in session storage under the specified key.
    * @param key - The key under which the value should be stored.
@@ -30,6 +30,14 @@ export class SessionService {
       return sessionStorage.getItem(key);
     }
     return null;
+  }
+
+  /**
+   * Retrieves the user's UID from session storage.
+   * @returns The user's UID, or null if session storage is not available or the UID does not exist.
+   */
+  getUid(): string | null {
+    return this.get('uid')?.toString() ?? null;
   }
 
   /**
