@@ -4,13 +4,17 @@ import { map, take } from 'rxjs/operators';
 import { User } from '../models/UserModel/user.model';
 import { ReplaySubject } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { uid } from 'chart.js/dist/helpers/helpers.core';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
-  constructor(private db: AngularFireDatabase, private auth: AngularFireAuth) {}
+  constructor(
+    private db: AngularFireDatabase,
+    private auth: AngularFireAuth,
+    private sessionService: SessionService
+  ) {}
 
   async signup(newUser: any) {
     const result = await this.auth.createUserWithEmailAndPassword(
@@ -18,7 +22,7 @@ export class FirebaseService {
       newUser.password
     );
     if (result.user) {
-      sessionStorage && sessionStorage.setItem('userid', result.user.uid);
+      this.sessionService.save(result.user.uid);
       const user: User = {
         email: newUser.email,
         balance: 0,
@@ -36,7 +40,7 @@ export class FirebaseService {
   async login(email: string, password: string) {
     const result = await this.auth.signInWithEmailAndPassword(email, password);
     if (result.user) {
-      sessionStorage && sessionStorage.setItem('userid', result.user.uid);
+      this.sessionService.save(result.user.uid);
     } else {
       throw new Error('Login failed');
     }
@@ -44,58 +48,44 @@ export class FirebaseService {
 
   async logout() {
     await this.auth.signOut();
-    sessionStorage && sessionStorage.removeItem('userid');
+    this.sessionService.clear();
   }
 
   async getUserData() {
-    if (sessionStorage) {
-      const uid = sessionStorage.getItem('userid');
+    const uid = this.sessionService.get();
 
-      if (uid) {
-        console.log(
-          this.db
-            .object(`users/${uid}`)
-            .valueChanges()
-            .pipe(take(1))
-            .toPromise()
-        );
-
-        return this.db
-          .object(`users/${uid}`)
-          .valueChanges()
-          .pipe(take(1))
-          .toPromise();
-      } else {
-        throw new Error('No user ID found in session storage');
-      }
+    if (uid) {
+      return this.db
+        .object(`users/${uid}`)
+        .valueChanges()
+        .pipe(take(1))
+        .toPromise();
+    } else {
+      throw new Error('No user ID found in session storage');
     }
-    throw new Error('Session storage not available');
   }
 
   async getUserBalance(): Promise<number> {
-    if (sessionStorage) {
-      const userId = sessionStorage.getItem('userid');
-      if (userId) {
-        const user = await this.db
-          .object(`users/${userId}`)
-          .valueChanges()
-          .pipe(
-            map((user: any) => {
-              return user.balance;
-            })
-          )
-          .toPromise();
+    const userId = this.sessionService.get();
+    if (userId) {
+      const user = await this.db
+        .object(`users/${userId}`)
+        .valueChanges()
+        .pipe(
+          map((user: any) => {
+            return user.balance;
+          })
+        )
+        .toPromise();
 
-        return user.balance;
-      } else {
-        throw new Error('No user ID found in session storage');
-      }
+      return user.balance;
+    } else {
+      throw new Error('No user ID found in session storage');
     }
-    throw new Error('Session storage not available');
   }
 
   async updateUserBalance(newBalance: number) {
-    const userId = sessionStorage.getItem('userid');
+    const userId = this.sessionService.get();
     this.db.object(`users/${userId}`).update({ balance: newBalance });
   }
 }
