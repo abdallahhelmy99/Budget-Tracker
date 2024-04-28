@@ -4,33 +4,30 @@ import { map, take } from 'rxjs/operators';
 import { User } from '../models/UserModel/user.model';
 import { ReplaySubject } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { uid } from 'chart.js/dist/helpers/helpers.core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
-  private currentUserSubject = new ReplaySubject<User | null>(1); // Change this line
-  currentUser$ = this.currentUserSubject.asObservable();
-
   constructor(private db: AngularFireDatabase, private auth: AngularFireAuth) {}
-  // current user
 
-  async signup(email: string, password: string) {
+  async signup(newUser: any) {
     const result = await this.auth.createUserWithEmailAndPassword(
-      email,
-      password
+      newUser.email,
+      newUser.password
     );
-    const user = result.user;
-    if (user) {
-      const newUser: User = {
-        userid: user.uid, // Fix: Change type from number to string
-        email,
-        name: '', // default value
-        password, // from signup form
-        balance: 0, // default value
+    if (result.user) {
+      sessionStorage.setItem('userid', result.user.uid);
+      const user: User = {
+        email: newUser.email,
+        balance: 0,
+        userid: result.user.uid,
+        fname: newUser.fname,
+        lname: newUser.fname,
       };
-      this.currentUserSubject.next(newUser);
-      return newUser;
+      await this.db.object(`users/${result.user.uid}`).set(user);
+      window.location.href = '/home';
     } else {
       throw new Error('Signup failed');
     }
@@ -38,13 +35,16 @@ export class FirebaseService {
 
   async login(email: string, password: string) {
     const result = await this.auth.signInWithEmailAndPassword(email, password);
-    const user = result.user;
-    if (user) {
-      sessionStorage.setItem('userid', user.uid);
-      return true;
+    if (result.user) {
+      sessionStorage.setItem('userid', result.user.uid);
     } else {
       throw new Error('Login failed');
     }
+  }
+
+  async logout() {
+    await this.auth.signOut();
+    sessionStorage.removeItem('userid');
   }
 
   async getUserData() {

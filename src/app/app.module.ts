@@ -21,6 +21,7 @@ import {
 } from '@angular/fire/compat/database';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyApLtsOeQvx2_HdGvsw4jY1GqIb5ufHb90',
@@ -51,6 +52,7 @@ const firebaseConfig = {
     HttpClientModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     provideClientHydration(),

@@ -18,4 +18,9 @@ export class HomeComponent {
       this.currentUser = user;
     });
   }
+
+  logout() {
+    this.firebaseService.logout();
+    window.location.href = '/';
+  }
 }
