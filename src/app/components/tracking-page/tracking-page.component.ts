@@ -1,7 +1,5 @@
 // tracking-page.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { UserService } from '../../services/UserService/user.service';
-import { SessionStorageService } from '../../services/SessionStorageService/session.service';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { BudgetService } from '../../services/BudgetService/budget.service';
 import { Budget } from '../../models/BudgetModel/budget.model';
 
@@ -12,30 +10,18 @@ import { Budget } from '../../models/BudgetModel/budget.model';
 })
 export class TrackingPageComponent {
   currentUser: any;
-  budget: Budget = {
-    budgetId: '',
-    name: '',
-    amount: 0,
-    start_date: '',
-    end_date: '',
-    remaining_amount: 0,
-  };
+  budget: Budget | undefined;
   @Output() newItemEvent = new EventEmitter<{
     type: string;
     name: string;
     amount: number;
   }>();
 
-  constructor(
-    private budgetService: BudgetService,
-    private userService: UserService,
-    private sessionstorageService: SessionStorageService
-  ) {}
+  constructor(private budgetService: BudgetService) {}
 
-  ngOnInit() {
-    const userid = this.sessionstorageService.getUid();
-    this.budgetService.getBudget(userid!).then((budget) => {
-      this.budget = budget as Budget;
+  ngOnInit(): void {
+    this.budgetService.getBudgets().subscribe((budgets) => {
+      this.budget = budgets[0];
     });
   }
 }

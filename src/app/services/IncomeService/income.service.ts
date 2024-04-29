@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Income } from '../../models/IncomeModel/income.model';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
+import { BudgetService } from '../BudgetService/budget.service';
+import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
  * Service for managing incomes.
@@ -11,15 +13,20 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class IncomeService {
-  constructor(private db: AngularFireDatabase) {}
-
+  constructor(
+    private db: AngularFireDatabase,
+    private budgetService: BudgetService,
+    private sessionStorageService: SessionStorageService
+  ) {}
+  userId = this.sessionStorageService.getUid();
   /**
    * Creates a new income.
    * @param income - The details of the new income.
    */
   async createIncome(income: Income) {
-    await this.db.object(`incomes/${income.incomeId}`).set(income);
-    // TODO: Call UpdateBudgetService here
+    await this.db
+      .object(`incomes/${this.userId}/${income.incomeId}`)
+      .set(income);
   }
 
   /**
@@ -27,14 +34,10 @@ export class IncomeService {
    * @param userId - The ID of the income to retrieve.
    * @returns The income with the specified ID.
    */
-  // income.service.ts
-  async getIncome(userId: string) {
-    const incomes$ = this.db
-      .list<Income>(`incomes`, (ref) =>
-        ref.orderByChild('incomeId').equalTo(userId)
-      )
+  getIncomes(): Observable<Income[]> {
+    return this.db
+      .list<Income>(`incomes/${this.sessionStorageService.getUid()}`)
       .valueChanges();
-    return firstValueFrom(incomes$);
   }
 
   /**
@@ -42,7 +45,9 @@ export class IncomeService {
    * @param income - The updated details of the income.
    */
   async updateIncome(income: Income) {
-    await this.db.object(`incomes/${income.incomeId}`).update(income);
+    await this.db
+      .object(`incomes/${this.userId}/${income.incomeId}`)
+      .update(income);
   }
 
   /**
@@ -50,6 +55,6 @@ export class IncomeService {
    * @param incomeId - The ID of the income to delete.
    */
   async deleteIncome(incomeId: string) {
-    await this.db.object(`incomes/${incomeId}`).remove();
+    await this.db.object(`incomes/${this.userId}/${incomeId}`).remove();
   }
 }

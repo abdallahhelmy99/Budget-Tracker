@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Expense } from '../../models/ExpenseModel/expense.model';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
+import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
  * Service for managing expenses.
@@ -11,14 +12,20 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class ExpenseService {
-  constructor(private db: AngularFireDatabase) {}
+  constructor(
+    private db: AngularFireDatabase,
+    private sessionStorageService: SessionStorageService
+  ) {}
+  userId = this.sessionStorageService.getUid();
 
   /**
    * Creates a new expense.
    * @param expense - The details of the new expense.
    */
   async createExpense(expense: Expense) {
-    await this.db.object(`expenses/${expense.expenseId}`).set(expense);
+    await this.db
+      .object(`expenses/${this.userId}/${expense.expenseId}`)
+      .set(expense);
     // TODO: Call UpdateBudgetService here
   }
 
@@ -27,11 +34,10 @@ export class ExpenseService {
    * @param userID - The ID of the expense to retrieve.
    * @returns The expense with the specified ID.
    */
-  async getExpense(userId: string) {
-    const expenses$ = this.db
-      .list(`expenses`, (ref) => ref.orderByChild('expenseId').equalTo(userId))
+  getExpenses(): Observable<Expense[]> {
+    return this.db
+      .list<Expense>(`expenses/${this.sessionStorageService.getUid()}`)
       .valueChanges();
-    return firstValueFrom(expenses$);
   }
 
   /**
@@ -39,7 +45,9 @@ export class ExpenseService {
    * @param expense - The updated details of the expense.
    */
   async updateExpense(expense: Expense) {
-    await this.db.object(`expenses/${expense.expenseId}`).update(expense);
+    await this.db
+      .object(`expenses/${this.userId}/${expense.expenseId}`)
+      .update(expense);
   }
 
   /**
@@ -47,6 +55,6 @@ export class ExpenseService {
    * @param expenseId - The ID of the expense to delete.
    */
   async deleteExpense(expenseId: string) {
-    await this.db.object(`expenses/${expenseId}`).remove();
+    await this.db.object(`expenses/${this.userId}/${expenseId}`).remove();
   }
 }

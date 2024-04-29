@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { TrackingPageComponent } from './components/tracking-page/tracking-page.component';
 import { IncomeExpenseListComponent } from './components/income-expense-list/income-expense-list.component';
 import { AddComponent } from './components/add/add.component';
-import { BalanceComponent } from './components/balance/balance.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegisterComponent } from './components/register/register.component';
 import {
@@ -41,7 +40,6 @@ const firebaseConfig = {
     TrackingPageComponent,
     IncomeExpenseListComponent,
     AddComponent,
-    BalanceComponent,
     DashboardComponent,
     RegisterComponent,
   ],

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/UserService/user.service';
 import { AuthService } from '../../services/AuthService/auth.service';
 import { SessionStorageService } from '../../services/SessionStorageService/session.service';
+import { User } from '../../models/UserModel/user.model';
 
 @Component({
   selector: 'app-home',
@@ -9,18 +10,16 @@ import { SessionStorageService } from '../../services/SessionStorageService/sess
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  currentUser: any;
+  currentUser: User | undefined;
 
   constructor(
     private userService: UserService,
-    private authService: AuthService,
-    private sessionStorageService: SessionStorageService
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
-    const userid = this.sessionStorageService.getUid();
-    this.userService.getUser(userid!).then((user) => {
-      this.currentUser = user;
+  ngOnInit(): void {
+    this.userService.getUser().subscribe((user) => {
+      this.currentUser = user!;
     });
   }
 

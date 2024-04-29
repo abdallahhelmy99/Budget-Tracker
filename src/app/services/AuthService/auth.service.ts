@@ -5,6 +5,7 @@ import { SessionStorageService } from '../SessionStorageService/session.service'
 import { UserService } from '../UserService/user.service';
 import { BudgetService } from '../BudgetService/budget.service';
 import { Budget } from '../../models/BudgetModel/budget.model';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ import { Budget } from '../../models/BudgetModel/budget.model';
 export class AuthService {
   constructor(
     private auth: AngularFireAuth,
+    private db: AngularFireDatabase,
     private sessionService: SessionStorageService,
     private userService: UserService,
     private budgetService: BudgetService
@@ -30,8 +32,9 @@ export class AuthService {
         lname: newUser.lname,
         email: newUser.email,
       };
+      const budgetId = this.db.database.ref('budgets').push().key;
       const budget: Budget = {
-        budgetId: result.user.uid,
+        budgetId: budgetId!,
         name: '',
         amount: 0,
         start_date: '',
@@ -39,7 +42,7 @@ export class AuthService {
         remaining_amount: 0,
       };
       await this.userService.createUser(user);
-      await this.budgetService.createBudget(budget);
+      await this.budgetService.createBudget(budget, result.user.uid);
       window.location.href = '/home';
     } else {
       throw new Error('Signup failed');

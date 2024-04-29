@@ -18,26 +18,28 @@ export class IncomeExpenseListComponent implements OnInit {
 
   constructor(
     private expenseService: ExpenseService,
-    private incomeService: IncomeService,
-    private sessionstorageService: SessionStorageService
+    private incomeService: IncomeService
   ) {}
+
   ngOnInit(): void {
-    const userId = this.sessionstorageService.getUid();
-    this.getExpenses(userId!);
-    this.getIncomes(userId!);
-    console.log(this.expenses);
-    console.log(this.incomes);
-  }
+    this.expenseService.getExpenses().subscribe((expenses) => {
+      this.expenses = expenses;
+    });
 
-  async getExpenses(userId: string) {
-    this.expenses = (await this.expenseService.getExpense(userId)) as Expense[];
-  }
-
-  async getIncomes(userId: string) {
-    this.incomes = (await this.incomeService.getIncome(userId)) as Income[];
+    this.incomeService.getIncomes().subscribe((incomes) => {
+      this.incomes = incomes;
+    });
   }
 
   addItem(item: { type: string; name: string; amount: number }) {
     this.items.push(item);
+  }
+
+  deleteIncome(incomeId: string) {
+    this.incomeService.deleteIncome(incomeId);
+  }
+
+  deleteExpense(expenseId: string) {
+    this.expenseService.deleteExpense(expenseId);
   }
 }
