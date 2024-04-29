@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Budget } from '../../models/BudgetModel/budget.model';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
@@ -16,13 +16,17 @@ export class BudgetService {
     private db: AngularFireDatabase,
     private sessionStorageService: SessionStorageService
   ) {}
-  userId = this.sessionStorageService.getUid();
+
   /**
    * Creates a new budget.
    * @param budget - The details of the new budget.
    */
-  async createBudget(budget: Budget, userId: string) {
-    await this.db.object(`budgets/${userId}/${budget.budgetId}`).set(budget);
+  async createBudget(budget: Budget) {
+    await this.db
+      .object(
+        `budgets/${this.sessionStorageService.getUid()}/${budget.budgetId}`
+      )
+      .set(budget);
   }
 
   /**
@@ -42,7 +46,9 @@ export class BudgetService {
    */
   async updateBudget(budget: Budget) {
     await this.db
-      .object(`budgets/${this.userId}/${budget.budgetId}`)
+      .object(
+        `budgets/${this.sessionStorageService.getUid()}/${budget.budgetId}`
+      )
       .update(budget);
   }
 
@@ -51,6 +57,8 @@ export class BudgetService {
    * @param budgetId - The ID of the budget to delete.
    */
   async deleteBudget(budgetId: string) {
-    await this.db.object(`budgets/${this.userId}/${budgetId}`).remove();
+    await this.db
+      .object(`budgets/${this.sessionStorageService.getUid()}/${budgetId}`)
+      .remove();
   }
 }
