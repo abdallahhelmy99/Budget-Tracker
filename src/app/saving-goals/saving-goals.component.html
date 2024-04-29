@@ -1,0 +1,57 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div class="relative py-3 md:max-w-full sm:mx-auto w-3/5">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+        </div>
+        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="max-w-md mx-auto">
+                <div class="flex items-center">
+                    <a routerLink="/home" class="mb-4 text-cyan-500 hover:text-cyan-700 mr-4">
+                        <i class="fas fa-arrow-left text-lg"></i>
+                    </a>
+                    <h2 class="text-2xl font-semibold">Saving Goals</h2>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                        <h3 class="text-lg font-semibold">Your Saving Goals:</h3>
+                        <ul class="grid grid-cols-1 gap-2 w-full">
+                            <li *ngFor="let goal of savingGoals"
+                                class="border-2 border-gray-200 py-2 px-4 rounded-lg flex items-end justify-between shadow-md">
+                                <p class="text-lg font-semibold">
+                                    {{ goal.name }}: {{ goal.amount }}
+                                </p>
+                                <div>
+                                    <button (click)="editSavingGoal(goal)" class="text-cyan-500 font-bold py-1 mb-2">
+                                        <i class="fas fa-edit text-md"></i>
+                                    </button>
+                                    <button (click)="deleteSavingGoal(goal.savingGoalId)"
+                                        class="ml-1 text-red-500 font-bold py-1 mb-2">
+                                        <i class="fas fa-trash-alt text-md"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
+                        <!-- <h3 class="text-lg font-semibold">{{editingSavingGoalId ? 'Edit saving goal:' : 'Create a new saving goal:'}}</h3> -->
+                        <!-- <form (ngSubmit)="saveSavingGoal()">
+                            <div class="mb-4">
+                                <label for="goalName" class="block text-gray-700 text-sm font-bold mb-2">Goal Name:</label>
+                                <input type="text" id="goalName" [(ngModel)]="newGoal.name" name="goalName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-6">
+                                <label for="goalAmount" class="block text-gray-700 text-sm font-bold mb-2">Goal Amount:</label>
+                                <input type="number" id="goalAmount" [(ngModel)]="newGoal.amount" name="goalAmount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                                    {{editingSavingGoalId ? 'Save Changes' : 'Create Goal'}}
+                                </button>
+                            </div>
+                        </form> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
