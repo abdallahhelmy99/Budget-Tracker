@@ -1,60 +1,110 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { Chart, LineController, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarController, BarElement, DoughnutController, ArcElement } from 'chart.js';
+import {
+  Chart,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarController,
+  BarElement,
+  DoughnutController,
+  ArcElement,
+} from 'chart.js';
 
-Chart.register(LineController, BarController, BarElement, DoughnutController, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import { ExpenseService } from '../../services/ExpenseService/expense.service';
+import { IncomeService } from '../../services/IncomeService/income.service';
+import { SavingGoalService } from '../../services/SavingGoalService/savinggoal.service';
+
+Chart.register(
+  LineController,
+  BarController,
+  BarElement,
+  DoughnutController,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements AfterViewInit {
   @ViewChild('incomeChart') incomeChartRef: ElementRef = {} as ElementRef;
   @ViewChild('expensesChart') expensesChartRef: ElementRef = {} as ElementRef;
-  @ViewChild('savingsGoalsChart') savingsGoalsChartRef: ElementRef = {} as ElementRef;
+  @ViewChild('savingsGoalsChart') savingsGoalsChartRef: ElementRef =
+    {} as ElementRef;
+
+  constructor(
+    private expenseService: ExpenseService,
+    private incomeService: IncomeService,
+    private savingGoalService: SavingGoalService
+  ) {}
 
   ngAfterViewInit() {
-    new Chart(this.incomeChartRef.nativeElement, {
-      type: 'line',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Income',
-          data: [65, 59, 80, 81, 56, 55, 40],
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-      }
-    });
-
-    new Chart(this.expensesChartRef.nativeElement, {
-      type: 'bar',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Expenses',
-          data: [65, 59, 80, 81, 56, 55, 40],
-          backgroundColor: 'rgb(255, 99, 132)',
-        }]
-      }
-    });
-
-    new Chart(this.savingsGoalsChartRef.nativeElement, {
-      type: 'doughnut',
-      data: {
-        labels: ['Savings Goal 1', 'Savings Goal 2', 'Savings Goal 3'],
-        datasets: [{
-          label: 'Savings Goals',
-          data: [300, 50, 100],
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+    this.incomeService.getIncomes().subscribe((incomes) => {
+      new Chart(this.incomeChartRef.nativeElement, {
+        type: 'line',
+        data: {
+          labels: incomes.map((income) => income.date), // replace with your date property
+          datasets: [
+            {
+              label: 'Income',
+              data: incomes.map((income) => income.amount), // replace with your amount property
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1,
+            },
           ],
-          hoverOffset: 4
-        }]
-      }
+        },
+      });
+    });
+
+    this.expenseService.getExpenses().subscribe((expenses) => {
+      new Chart(this.expensesChartRef.nativeElement, {
+        type: 'bar',
+        data: {
+          labels: expenses.map((expense) => expense.date),
+          datasets: [
+            {
+              label: 'Expenses',
+              data: expenses.map((expense) => expense.amount), // replace with your amount property
+              backgroundColor: 'rgb(255, 99, 132)',
+            },
+          ],
+        },
+      });
+    });
+
+    this.savingGoalService.getSavingGoals().subscribe((savingGoals) => {
+      new Chart(this.savingsGoalsChartRef.nativeElement, {
+        type: 'doughnut',
+        data: {
+          labels: savingGoals.map((savingGoal) => savingGoal.name), // replace with your name property
+          datasets: [
+            {
+              label: 'Savings Goals',
+              data: savingGoals.map((savingGoal) => savingGoal.amount), // replace with your amount property
+              backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)',
+              ],
+              hoverOffset: 4,
+            },
+          ],
+        },
+      });
     });
   }
 }

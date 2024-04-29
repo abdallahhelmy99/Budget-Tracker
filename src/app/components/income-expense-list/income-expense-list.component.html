@@ -1,7 +1,7 @@
 <div class="bg-white rounded px-8 pt-6 pb-8 mb-4 flex flex-col" *ngIf="incomes.length || expenses.length">
     <div *ngIf="incomes.length">
         <h2 class="mb-4 font-bold text-md">Incomes</h2>
-        <ul>
+        <ul class="space-y-3">
             <li *ngFor="let income of incomes" class="text-green-500 flex flex-col justify-between items-start">
                 <div class="flex justify-between items-center w-full">
                     <span>{{income.name}}: {{income.amount | currency:'EGP'}}</span>
@@ -13,11 +13,10 @@
             </li>
         </ul>
     </div>
-    <!-- divider -->
     <hr class="my-4" *ngIf="incomes.length && expenses.length">
     <div *ngIf="expenses.length">
         <h2 class="mb-4 font-bold text-md">Expenses</h2>
-        <ul>
+        <ul class="space-y-3">
             <li *ngFor="let expense of expenses" class="text-red-500 flex flex-col justify-between items-start">
                 <div class="flex justify-between items-center w-full">
                     <span>{{expense.name}}: {{expense.amount | currency:'EGP'}}</span>

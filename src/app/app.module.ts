@@ -21,6 +21,7 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BudgetManagementComponent } from './budget-management/budget-management.component';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyApLtsOeQvx2_HdGvsw4jY1GqIb5ufHb90',
@@ -42,6 +43,7 @@ const firebaseConfig = {
     AddComponent,
     DashboardComponent,
     RegisterComponent,
+    BudgetManagementComponent,
   ],
   imports: [
     BrowserModule,

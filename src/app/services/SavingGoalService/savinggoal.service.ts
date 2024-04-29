@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { SavingGoal } from '../../models/SavingGoalModel/savinggoal.model';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
+import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
  * Service for managing saving goals.
@@ -11,7 +12,10 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class SavingGoalService {
-  constructor(private db: AngularFireDatabase) {}
+  constructor(
+    private db: AngularFireDatabase,
+    private sessionStorageService: SessionStorageService
+  ) {}
 
   /**
    * Creates a new saving goal.
@@ -28,11 +32,10 @@ export class SavingGoalService {
    * @param savingGoalId - The ID of the saving goal to retrieve.
    * @returns The saving goal with the specified ID.
    */
-  async getSavingGoal(savingGoalId: string) {
-    const savingGoal$ = this.db
-      .object(`savingGoals/${savingGoalId}`)
+  getSavingGoals(): Observable<SavingGoal[]> {
+    return this.db
+      .list<SavingGoal>(`savingGoals/${this.sessionStorageService.getUid()}`)
       .valueChanges();
-    return firstValueFrom(savingGoal$);
   }
 
   /**

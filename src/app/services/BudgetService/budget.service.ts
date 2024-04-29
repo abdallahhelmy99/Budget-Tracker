@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Budget } from '../../models/BudgetModel/budget.model';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
@@ -50,6 +50,14 @@ export class BudgetService {
         `budgets/${this.sessionStorageService.getUid()}/${budget.budgetId}`
       )
       .update(budget);
+  }
+
+  async updateBudgetAmount(amount: number) {
+    // Assuming there's only one budget per user
+    const budgets = await this.getBudgets().pipe(take(1)).toPromise();
+    const budget = budgets![0];
+    budget.amount += amount;
+    await this.updateBudget(budget);
   }
 
   /**

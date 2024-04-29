@@ -16,7 +16,6 @@ export class ExpenseService {
     private db: AngularFireDatabase,
     private sessionStorageService: SessionStorageService
   ) {}
-  userId = this.sessionStorageService.getUid();
 
   /**
    * Creates a new expense.
@@ -24,7 +23,9 @@ export class ExpenseService {
    */
   async createExpense(expense: Expense) {
     await this.db
-      .object(`expenses/${this.userId}/${expense.expenseId}`)
+      .object(
+        `expenses/${this.sessionStorageService.getUid()}/${expense.expenseId}`
+      )
       .set(expense);
     // TODO: Call UpdateBudgetService here
   }
@@ -46,7 +47,9 @@ export class ExpenseService {
    */
   async updateExpense(expense: Expense) {
     await this.db
-      .object(`expenses/${this.userId}/${expense.expenseId}`)
+      .object(
+        `expenses/${this.sessionStorageService.getUid()}/${expense.expenseId}`
+      )
       .update(expense);
   }
 
@@ -55,6 +58,8 @@ export class ExpenseService {
    * @param expenseId - The ID of the expense to delete.
    */
   async deleteExpense(expenseId: string) {
-    await this.db.object(`expenses/${this.userId}/${expenseId}`).remove();
+    await this.db
+      .object(`expenses/${this.sessionStorageService.getUid()}/${expenseId}`)
+      .remove();
   }
 }
