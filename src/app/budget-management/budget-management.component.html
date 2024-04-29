@@ -1,0 +1,65 @@
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div class="relative py-3 md:max-w-full sm:mx-auto w-3/5">
+        <div
+            class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+        </div>
+        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="max-w-md mx-auto">
+                <div class="flex items-center">
+                    <a routerLink="/home" class="mb-4 text-cyan-500 hover:text-cyan-700 mr-4">
+                        <i class="fas fa-arrow-left text-lg"></i>
+                    </a>
+                    <h2 class="text-2xl font-semibold">Manage Budgets</h2>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                        <h3 class="text-lg font-semibold">Your Budgets:</h3>
+                        <ul class="grid grid-cols-1 gap-2 w-full">
+                            <li *ngFor="let budget of budgets"
+                                class="border-2 border-gray-200 py-2 px-4 rounded-lg flex items-end justify-between shadow-md">
+                                <p class="text-lg font-semibold">
+                                    {{ budget.name }}: {{ budget.amount }}
+                                </p>
+                                <div>
+                                    <button (click)="editBudget(budget)" class="text-cyan-500 font-bold py-1 mb-2">
+                                        <i class="fas fa-edit text-md"></i>
+                                    </button>
+                                    <button (click)="deleteBudget(budget.budgetId)"
+                                        class="ml-1 text-red-500 font-bold py-1 mb-2">
+                                        <i class="fas fa-trash-alt text-md"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
+                        <h3 class="text-lg font-semibold">{{editingBudgetId ? 'Edit budget:' : 'Create a new budget:'}}
+                        </h3>
+                        <form (ngSubmit)="saveBudget()">
+                            <div class="mb-4">
+                                <label for="budgetName" class="block text-gray-700 text-sm font-bold mb-2">Budget
+                                    Name:</label>
+                                <input type="text" id="budgetName" [(ngModel)]="newBudget.name" name="budgetName"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-6">
+                                <label for="budgetAmount" class="block text-gray-700 text-sm font-bold mb-2">Budget
+                                    Amount:</label>
+                                <input type="number" id="budgetAmount" [(ngModel)]="newBudget.amount"
+                                    name="budgetAmount"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <button
+                                    class="bg-cyan-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    type="submit">
+                                    {{editingBudgetId ? 'Save Changes' : 'Create Budget'}}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

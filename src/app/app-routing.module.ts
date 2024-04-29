@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { TrackingPageComponent } from './components/tracking-page/tracking-page.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegisterComponent } from './components/register/register.component';
+import { BudgetManagementComponent } from './budget-management/budget-management.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'tracking', component: TrackingPageComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'budget', component: BudgetManagementComponent },
 ];
 
 @NgModule({

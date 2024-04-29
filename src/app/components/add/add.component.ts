@@ -5,6 +5,7 @@ import { IncomeService } from '../../services/IncomeService/income.service';
 import { Expense } from '../../models/ExpenseModel/expense.model';
 import { Income } from '../../models/IncomeModel/income.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { BudgetService } from '../../services/BudgetService/budget.service';
 
 @Component({
   selector: 'app-add',
@@ -27,6 +28,7 @@ export class AddComponent {
   constructor(
     private expenseService: ExpenseService,
     private incomeService: IncomeService,
+    private budgetService: BudgetService,
     private db: AngularFireDatabase
   ) {}
 
@@ -40,6 +42,7 @@ export class AddComponent {
         name: this.name,
       };
       await this.expenseService.createExpense(expense);
+      await this.budgetService.updateBudgetAmount(-this.amount); // subtract expense from budget
     } else if (this.type.toLowerCase() === 'income') {
       const incomeId = this.db.database.ref('incomes').push().key;
       const income: Income = {
@@ -49,6 +52,7 @@ export class AddComponent {
         date: this.date,
       };
       await this.incomeService.createIncome(income);
+      await this.budgetService.updateBudgetAmount(this.amount); // add income to budget
     }
 
     this.newItemEvent.emit({
