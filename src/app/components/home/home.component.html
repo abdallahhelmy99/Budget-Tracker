@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+    <div class="relative py-3 md:max-w-full sm:mx-auto w-3/5">
         <div
             class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
         </div>
@@ -7,7 +7,7 @@
             <div class="max-w-md mx-auto">
                 <div>
                     <h2 class="text-2xl font-semibold">Budget Tracker</h2>
-                    <h1 class="text-xl font-thin">Welcome, {{ currentUser?.fname }} </h1>
+                    <h1 class="text-xl font-thin">Welcome, {{ currentUser.fname }} </h1>
                 </div>
                 <div class="divide-y divide-gray-200">
                     <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
@@ -45,10 +45,13 @@
                             Want to dive in?
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700">
-                            <a routerLink="/tracking">Track Your Budget <span aria-hidden="true">&rarr;</span></a>
+                            <a routerLink="/dashboard">Dashboard <span aria-hidden="true">&rarr;</span></a>
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700">
-                            <a routerLink="/dashboard">Dashboard <span aria-hidden="true">&rarr;</span></a>
+                            <a routerLink="/tracking"> Track Your Budgets <span aria-hidden="true">&rarr;</span></a>
+                        </p>
+                        <p class="text-cyan-600 hover:text-cyan-700">
+                            <a> Manage Your Budgets (Not Implemented) <span aria-hidden="true">&rarr;</span></a>
                         </p>
                         <p class="text-cyan-600 hover:text-cyan-700">
                             <a>Saving Goals (Not Implemented) <span aria-hidden="true">&rarr;</span></a>

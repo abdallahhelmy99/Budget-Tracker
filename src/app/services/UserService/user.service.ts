@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { User } from '../../models/UserModel/user.model';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
+import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
  * Service for managing users.
@@ -11,7 +12,10 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private db: AngularFireDatabase) {}
+  constructor(
+    private db: AngularFireDatabase,
+    private sessionStorageService: SessionStorageService
+  ) {}
 
   /**
    * Creates a new user.
@@ -22,13 +26,13 @@ export class UserService {
   }
 
   /**
-   * Retrieves a user by their ID.
-   * @param userId - The ID of the user to retrieve.
-   * @returns The user with the specified ID.
+   * Retrieves a user.
+   * @returns The user or null if not found.
    */
-  async getUser(userId: string) {
-    const user$ = this.db.object(`users/${userId}`).valueChanges();
-    return firstValueFrom(user$);
+  getUser(): Observable<User | null> {
+    return this.db
+      .object<User>(`users/${this.sessionStorageService.getUid()}`)
+      .valueChanges();
   }
 
   /**
