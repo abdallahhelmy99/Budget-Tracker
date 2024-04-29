@@ -25,6 +25,8 @@ export class IncomeExpenseListComponent implements OnInit {
     const userId = this.sessionstorageService.getUid();
     this.getExpenses(userId!);
     this.getIncomes(userId!);
+    console.log(this.expenses);
+    console.log(this.incomes);
   }
 
   async getExpenses(userId: string) {

@@ -19,16 +19,20 @@ export class IncomeService {
    */
   async createIncome(income: Income) {
     await this.db.object(`incomes/${income.incomeId}`).set(income);
+    // TODO: Call UpdateBudgetService here
   }
 
   /**
    * Retrieves an income by its ID.
-   * @param incomeId - The ID of the income to retrieve.
+   * @param userId - The ID of the income to retrieve.
    * @returns The income with the specified ID.
    */
+  // income.service.ts
   async getIncome(userId: string) {
     const incomes$ = this.db
-      .list(`incomes`, (ref) => ref.orderByChild('userId').equalTo(userId))
+      .list<Income>(`incomes`, (ref) =>
+        ref.orderByChild('incomeId').equalTo(userId)
+      )
       .valueChanges();
     return firstValueFrom(incomes$);
   }
