@@ -81,11 +81,7 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const result = await this.auth.signInWithEmailAndPassword(email, password);
-    if (result.user) {
-      this.sessionService.save('uid', result.user.uid);
-    } else {
-      throw new Error('Login failed');
-    }
+    result.user && this.sessionService.save('uid', result.user.uid);
   }
 
   async logout() {
