@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Budget } from '../../models/BudgetModel/budget.model';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
+import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
  * Service for managing budgets.
@@ -11,14 +12,17 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class BudgetService {
-  constructor(private db: AngularFireDatabase) {}
-
+  constructor(
+    private db: AngularFireDatabase,
+    private sessionStorageService: SessionStorageService
+  ) {}
+  userId = this.sessionStorageService.getUid();
   /**
    * Creates a new budget.
    * @param budget - The details of the new budget.
    */
-  async createBudget(budget: Budget) {
-    await this.db.object(`budgets/${budget.budgetId}`).set(budget);
+  async createBudget(budget: Budget, userId: string) {
+    await this.db.object(`budgets/${userId}/${budget.budgetId}`).set(budget);
   }
 
   /**
@@ -26,9 +30,10 @@ export class BudgetService {
    * @param budgetId - The ID of the budget to retrieve.
    * @returns The budget with the specified ID.
    */
-  async getBudget(budgetId: string) {
-    const budget$ = this.db.object(`budgets/${budgetId}`).valueChanges();
-    return firstValueFrom(budget$);
+  getBudgets(): Observable<Budget[]> {
+    return this.db
+      .list<Budget>(`budgets/${this.sessionStorageService.getUid()}`)
+      .valueChanges();
   }
 
   /**
@@ -36,7 +41,9 @@ export class BudgetService {
    * @param budget - The updated details of the budget.
    */
   async updateBudget(budget: Budget) {
-    await this.db.object(`budgets/${budget.budgetId}`).update(budget);
+    await this.db
+      .object(`budgets/${this.userId}/${budget.budgetId}`)
+      .update(budget);
   }
 
   /**
@@ -44,6 +51,6 @@ export class BudgetService {
    * @param budgetId - The ID of the budget to delete.
    */
   async deleteBudget(budgetId: string) {
-    await this.db.object(`budgets/${budgetId}`).remove();
+    await this.db.object(`budgets/${this.userId}/${budgetId}`).remove();
   }
 }

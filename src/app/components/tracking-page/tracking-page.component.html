@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-    <div class="relative py-3 sm:max-w-full sm:mx-auto">
+    <div class="relative py-3 sm:max-w-full sm:mx-auto w-3/4">
         <div
             class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
         </div>
@@ -9,11 +9,15 @@
                     <div class="flex items-center">
                         <button class="text-2xl mb-3 mr-4 bg-transparent text-cyan-400 font-bold rounded"
                             routerLink="/home">&#8592;</button>
-                        <h1 class="text-2xl font-semibold ">Budget Tracker</h1>
+                        <h1 class="text-2xl font-semibold ">Track Your Budget</h1>
                     </div>
-                    <p class="text-2xl font-bold text-gray-700">Current Budget: <span class="text-green-500"
-                            [ngClass]="{'text-red-500': budget!.amount < 0}">{{ budget!.amount | currency
-                            }}</span></p>
+
+                    <p class="text-2xl font-bold text-gray-700">
+                        <span class="text-green-500" [ngClass]="{'text-red-500': budget!.amount < 0}">
+                            {{ budget!.amount | currency:'EGP' }}
+                        </span>
+                    </p>
+
                 </div>
                 <div class="divide-y divide-gray-200">
                     <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">

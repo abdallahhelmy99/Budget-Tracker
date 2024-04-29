@@ -1,16 +1,32 @@
-<!-- income-expense-list.component.html -->
-<div class="bg-white rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
-    <h2 class="mb-4 font-bold text-lg">Income and Expenses</h2>
-    <h2 class="mb-4 font-bold text-md">Incomes</h2>
-    <ul>
-        <li *ngFor="let income of incomes" class="text-green-500">
-            {{income.source}} - ${{income.amount}}
-        </li>
-    </ul>
-    <h2 class="mb-4 font-bold text-md">Expenses</h2>
-    <ul>
-        <li *ngFor="let expense of expenses" class="text-red-500">
-            {{expense.description}} - ${{expense.amount}}
-        </li>
-    </ul>
+<div class="bg-white rounded px-8 pt-6 pb-8 mb-4 flex flex-col" *ngIf="incomes.length || expenses.length">
+    <div *ngIf="incomes.length">
+        <h2 class="mb-4 font-bold text-md">Incomes</h2>
+        <ul>
+            <li *ngFor="let income of incomes" class="text-green-500 flex flex-col justify-between items-start">
+                <div class="flex justify-between items-center w-full">
+                    <span>{{income.name}}: {{income.amount | currency:'EGP'}}</span>
+                    <button (click)="deleteIncome(income.incomeId)" class="text-red-500">
+                        <i class="fas fa-trash-alt text-sm"></i>
+                    </button>
+                </div>
+                <span class="text-sm text-gray-500">{{income.date | date:'mediumDate'}}</span>
+            </li>
+        </ul>
+    </div>
+    <!-- divider -->
+    <hr class="my-4" *ngIf="incomes.length && expenses.length">
+    <div *ngIf="expenses.length">
+        <h2 class="mb-4 font-bold text-md">Expenses</h2>
+        <ul>
+            <li *ngFor="let expense of expenses" class="text-red-500 flex flex-col justify-between items-start">
+                <div class="flex justify-between items-center w-full">
+                    <span>{{expense.name}}: {{expense.amount | currency:'EGP'}}</span>
+                    <button (click)="deleteExpense(expense.expenseId)" class="text-red-500">
+                        <i class="fas fa-trash-alt text-sm"></i>
+                    </button>
+                </div>
+                <span class="text-sm text-gray-500">{{expense.date | date:'mediumDate'}}</span>
+            </li>
+        </ul>
+    </div>
 </div>

@@ -5,7 +5,6 @@ import { IncomeService } from '../../services/IncomeService/income.service';
 import { Expense } from '../../models/ExpenseModel/expense.model';
 import { Income } from '../../models/IncomeModel/income.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { SessionStorageService } from '../../services/SessionStorageService/session.service';
 
 @Component({
   selector: 'app-add',
@@ -23,36 +22,31 @@ export class AddComponent {
   type = 'Expense';
   name = '';
   amount = 0;
-  date = new Date().toISOString();
-  description = '';
-  source = '';
+  date = '';
 
   constructor(
     private expenseService: ExpenseService,
     private incomeService: IncomeService,
-    private db: AngularFireDatabase,
-    private sessionstorageService: SessionStorageService
+    private db: AngularFireDatabase
   ) {}
 
   async addItem() {
-    const categoryId = this.db.database.ref('categories').push().key;
-
     if (this.type.toLowerCase() === 'expense') {
+      const expenseId = this.db.database.ref('expenses').push().key;
       const expense: Expense = {
-        expenseId: this.sessionstorageService.getUid()!, // Replace with actual ID generation logic
+        expenseId: expenseId!,
         amount: this.amount,
-        category_id: categoryId?.toString() ?? '',
-        date: new Date().toISOString(), // Consider using a Date type if supported by Firebase
-        description: this.description,
+        date: this.date,
+        name: this.name,
       };
       await this.expenseService.createExpense(expense);
     } else if (this.type.toLowerCase() === 'income') {
+      const incomeId = this.db.database.ref('incomes').push().key;
       const income: Income = {
-        incomeId: this.sessionstorageService.getUid()!, // Replace with actual ID generation logic
+        incomeId: incomeId!,
         amount: this.amount,
-        source: this.source,
-        date: new Date().toISOString(), // Consider using a Date type if supported by Firebase
-        description: this.description,
+        name: this.name,
+        date: this.date,
       };
       await this.incomeService.createIncome(income);
     }
@@ -65,7 +59,5 @@ export class AddComponent {
 
     this.name = '';
     this.amount = 0;
-    this.description = '';
-    this.source = '';
   }
 }

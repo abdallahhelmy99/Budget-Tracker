@@ -23,19 +23,12 @@
         <input [(ngModel)]="amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
             id="amount" type="number" placeholder="Amount">
     </div>
-    <div class="mb-4" *ngIf="type === 'Expense'">
-        <label class="block text-grey-darker text-sm font-bold mb-2" for="description">
-            Description
+    <div class="mb-4">
+        <label class="block text-grey-darker text-sm font-bold mb-2" for="date">
+            Date
         </label>
-        <input [(ngModel)]="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-            id="description" type="text" placeholder="Description">
-    </div>
-    <div class="mb-4" *ngIf="type === 'Income'">
-        <label class="block text-grey-darker text-sm font-bold mb-2" for="source">
-            Source
-        </label>
-        <input [(ngModel)]="source" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-            id="source" type="text" placeholder="Source">
+        <input [(ngModel)]="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
+            id="date" type="date" placeholder="Date">
     </div>
     <div class="flex items-center justify-between">
         <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded" (click)="addItem()">
