@@ -19,16 +19,19 @@ export class ExpenseService {
    */
   async createExpense(expense: Expense) {
     await this.db.object(`expenses/${expense.expenseId}`).set(expense);
+    // TODO: Call UpdateBudgetService here
   }
 
   /**
    * Retrieves an expense by its ID.
-   * @param expenseId - The ID of the expense to retrieve.
+   * @param userID - The ID of the expense to retrieve.
    * @returns The expense with the specified ID.
    */
-  async getExpense(expenseId: string) {
-    const expense$ = this.db.object(`expenses/${expenseId}`).valueChanges();
-    return firstValueFrom(expense$);
+  async getExpense(userId: string) {
+    const expenses$ = this.db
+      .list(`expenses`, (ref) => ref.orderByChild('expenseId').equalTo(userId))
+      .valueChanges();
+    return firstValueFrom(expenses$);
   }
 
   /**

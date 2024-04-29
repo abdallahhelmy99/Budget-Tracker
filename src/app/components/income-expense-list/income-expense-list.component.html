@@ -1,9 +1,16 @@
 <!-- income-expense-list.component.html -->
 <div class="bg-white rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
     <h2 class="mb-4 font-bold text-lg">Income and Expenses</h2>
+    <h2 class="mb-4 font-bold text-md">Incomes</h2>
     <ul>
-        <li *ngFor="let item of items"
-            [ngClass]="{'text-red-500': item.type === 'Expense', 'text-green-500': item.type === 'Income'}">
-            {{item.name}} - ${{item.amount}}</li>
+        <li *ngFor="let income of incomes" class="text-green-500">
+            {{income.source}} - ${{income.amount}}
+        </li>
+    </ul>
+    <h2 class="mb-4 font-bold text-md">Expenses</h2>
+    <ul>
+        <li *ngFor="let expense of expenses" class="text-red-500">
+            {{expense.description}} - ${{expense.amount}}
+        </li>
     </ul>
 </div>
