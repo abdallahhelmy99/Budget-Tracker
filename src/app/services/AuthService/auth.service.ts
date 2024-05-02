@@ -50,18 +50,13 @@ export class AuthService {
       newUser.password
     );
     if (result.user) {
-      const budget: Budget = {
-        budgetId: this.db.database.ref('budgets').push().key!,
-        name: 'Budget',
-        amount: 0,
-        start_date: '',
-        end_date: '',
-        remaining_amount: 0,
+      const user: User = {
+        userid: result.user.uid,
+        fname: newUser.fname,
+        lname: newUser.lname,
+        email: newUser.email,
       };
-
-      await this.db
-        .object(`budgets/${result.user.uid}/${budget.budgetId}`)
-        .set(budget);
+      await this.db.object(`users/${user.userid}`).set(user);
       window.location.href = '/home';
     } else {
       throw new Error('Signup failed');
