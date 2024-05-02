@@ -37,6 +37,7 @@ export class AddComponent {
       const expenseId = this.db.database.ref('expenses').push().key;
       const expense: Expense = {
         expenseId: expenseId!,
+        budgetId: this.budgetService.selectedBudgetId.getValue(),
         amount: this.amount,
         date: this.date,
         name: this.name,
@@ -47,6 +48,7 @@ export class AddComponent {
       const incomeId = this.db.database.ref('incomes').push().key;
       const income: Income = {
         incomeId: incomeId!,
+        budgetId: this.budgetService.selectedBudgetId.getValue(),
         amount: this.amount,
         name: this.name,
         date: this.date,

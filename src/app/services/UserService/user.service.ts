@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { User } from '../../models/UserModel/user.model';
-import { Observable } from 'rxjs';
+import { Observable, from, switchMap } from 'rxjs';
 import { SessionStorageService } from '../SessionStorageService/session.service';
+import { AuthService } from '../AuthService/auth.service';
 
 /**
  * Service for managing users.
@@ -14,7 +15,7 @@ import { SessionStorageService } from '../SessionStorageService/session.service'
 export class UserService {
   constructor(
     private db: AngularFireDatabase,
-    private sessionStorageService: SessionStorageService
+    private authService: AuthService
   ) {}
 
   /**
@@ -29,10 +30,13 @@ export class UserService {
    * Retrieves a user.
    * @returns The user or null if not found.
    */
+
   getUser(): Observable<User | null> {
-    return this.db
-      .object<User>(`users/${this.sessionStorageService.getUid()}`)
-      .valueChanges();
+    return from(this.authService.getCurrentUserId()).pipe(
+      switchMap((userId) =>
+        this.db.object<User>(`users/${userId}`).valueChanges()
+      )
+    );
   }
 
   /**

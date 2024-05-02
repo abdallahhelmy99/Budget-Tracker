@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Income } from '../../models/IncomeModel/income.model';
-import { Observable } from 'rxjs';
+import { Observable, from, switchMap, tap } from 'rxjs';
+import { AuthService } from '../AuthService/auth.service';
 import { BudgetService } from '../BudgetService/budget.service';
-import { SessionStorageService } from '../SessionStorageService/session.service';
 
 /**
  * Service for managing incomes.
@@ -15,46 +15,45 @@ import { SessionStorageService } from '../SessionStorageService/session.service'
 export class IncomeService {
   constructor(
     private db: AngularFireDatabase,
-    private budgetService: BudgetService,
-    private sessionStorageService: SessionStorageService
+    private authService: AuthService,
+    private budgetService: BudgetService
   ) {}
-  userId = this.sessionStorageService.getUid();
-  /**
-   * Creates a new income.
-   * @param income - The details of the new income.
-   */
+
+  selectedBudgetId: string = '';
+
   async createIncome(income: Income) {
-    await this.db
-      .object(`incomes/${this.userId}/${income.incomeId}`)
-      .set(income);
+    const userId = await this.authService.getCurrentUserId();
+    income.budgetId = this.budgetService.selectedBudgetId.getValue();
+    await this.db.object(`incomes/${userId}/${income.incomeId}`).set(income);
   }
 
-  /**
-   * Retrieves an income by its ID.
-   * @param userId - The ID of the income to retrieve.
-   * @returns The income with the specified ID.
-   */
   getIncomes(): Observable<Income[]> {
-    return this.db
-      .list<Income>(`incomes/${this.sessionStorageService.getUid()}`)
-      .valueChanges();
+    return from(this.authService.getCurrentUserId()).pipe(
+      tap((userId) => console.log('User ID:', userId)),
+      switchMap((userId) =>
+        this.budgetService
+          .getSelectedBudget()
+          .pipe(
+            switchMap((selectedBudget) =>
+              this.db
+                .list<Income>(`incomes/${userId}`, (ref) =>
+                  ref.orderByChild('budgetId').equalTo(selectedBudget)
+                )
+                .valueChanges()
+            )
+          )
+      )
+    );
   }
 
-  /**
-   * Updates an income.
-   * @param income - The updated details of the income.
-   */
   async updateIncome(income: Income) {
-    await this.db
-      .object(`incomes/${this.userId}/${income.incomeId}`)
-      .update(income);
+    const userId = await this.authService.getCurrentUserId();
+    income.budgetId = this.selectedBudgetId;
+    await this.db.object(`incomes/${userId}/${income.incomeId}`).update(income);
   }
 
-  /**
-   * Deletes an income.
-   * @param incomeId - The ID of the income to delete.
-   */
   async deleteIncome(incomeId: string) {
-    await this.db.object(`incomes/${this.userId}/${incomeId}`).remove();
+    const userId = await this.authService.getCurrentUserId();
+    await this.db.object(`incomes/${userId}/${incomeId}`).remove();
   }
 }

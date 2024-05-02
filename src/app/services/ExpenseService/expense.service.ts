@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Expense } from '../../models/ExpenseModel/expense.model';
-import { Observable } from 'rxjs';
-import { SessionStorageService } from '../SessionStorageService/session.service';
+import { Observable, from, switchMap, tap } from 'rxjs';
+import { AuthService } from '../AuthService/auth.service';
+import { BudgetService } from '../BudgetService/budget.service';
 
 /**
  * Service for managing expenses.
@@ -14,52 +15,53 @@ import { SessionStorageService } from '../SessionStorageService/session.service'
 export class ExpenseService {
   constructor(
     private db: AngularFireDatabase,
-    private sessionStorageService: SessionStorageService
+    private authService: AuthService,
+    private budgetService: BudgetService
   ) {}
+
+  selectedBudgetId: string = '';
 
   /**
    * Creates a new expense.
    * @param expense - The details of the new expense.
    */
   async createExpense(expense: Expense) {
+    const userId = await this.authService.getCurrentUserId();
+    expense.budgetId = this.budgetService.selectedBudgetId.getValue();
     await this.db
-      .object(
-        `expenses/${this.sessionStorageService.getUid()}/${expense.expenseId}`
-      )
+      .object(`expenses/${userId}/${expense.expenseId}`)
       .set(expense);
-    // TODO: Call UpdateBudgetService here
   }
 
-  /**
-   * Retrieves an expense by its ID.
-   * @param userID - The ID of the expense to retrieve.
-   * @returns The expense with the specified ID.
-   */
   getExpenses(): Observable<Expense[]> {
-    return this.db
-      .list<Expense>(`expenses/${this.sessionStorageService.getUid()}`)
-      .valueChanges();
+    return from(this.authService.getCurrentUserId()).pipe(
+      tap((userId) => console.log('User ID:', userId)),
+      switchMap((userId) =>
+        this.budgetService
+          .getSelectedBudget()
+          .pipe(
+            switchMap((selectedBudget) =>
+              this.db
+                .list<Expense>(`expenses/${userId}`, (ref) =>
+                  ref.orderByChild('budgetId').equalTo(selectedBudget)
+                )
+                .valueChanges()
+            )
+          )
+      )
+    );
   }
 
-  /**
-   * Updates an expense.
-   * @param expense - The updated details of the expense.
-   */
   async updateExpense(expense: Expense) {
+    const userId = await this.authService.getCurrentUserId();
+    expense.budgetId = this.selectedBudgetId;
     await this.db
-      .object(
-        `expenses/${this.sessionStorageService.getUid()}/${expense.expenseId}`
-      )
+      .object(`expenses/${userId}/${expense.expenseId}`)
       .update(expense);
   }
 
-  /**
-   * Deletes an expense.
-   * @param expenseId - The ID of the expense to delete.
-   */
   async deleteExpense(expenseId: string) {
-    await this.db
-      .object(`expenses/${this.sessionStorageService.getUid()}/${expenseId}`)
-      .remove();
+    const userId = await this.authService.getCurrentUserId();
+    await this.db.object(`expenses/${userId}/${expenseId}`).remove();
   }
 }
