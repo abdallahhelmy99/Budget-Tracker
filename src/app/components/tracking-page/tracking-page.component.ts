@@ -20,8 +20,12 @@ export class TrackingPageComponent {
   constructor(private budgetService: BudgetService) {}
 
   ngOnInit(): void {
-    this.budgetService.getBudgets().subscribe((budgets) => {
-      this.budget = budgets[0];
+    this.budgetService.getSelectedBudget().subscribe((selectedBudgetId) => {
+      this.budgetService.getBudgets().subscribe((budgets) => {
+        this.budget = budgets.find(
+          (budget) => budget.budgetId === selectedBudgetId
+        );
+      });
     });
   }
 }

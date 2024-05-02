@@ -5,17 +5,34 @@ import { SessionStorageService } from '../SessionStorageService/session.service'
 import { UserService } from '../UserService/user.service';
 import { Budget } from '../../models/BudgetModel/budget.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(
-    private auth: AngularFireAuth,
-    private db: AngularFireDatabase,
-    private sessionService: SessionStorageService,
-    private userService: UserService
-  ) {}
+  constructor(private auth: AngularFireAuth, private db: AngularFireDatabase) {}
+
+  getCurrentUserId(): Promise<string | null> {
+    const auth = getAuth();
+    return new Promise((resolve, reject) => {
+      onAuthStateChanged(
+        auth,
+        (user) => {
+          if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/auth.user
+            const uid = user.uid;
+            resolve(uid);
+          } else {
+            // User is signed out
+            resolve(null);
+          }
+        },
+        reject
+      );
+    });
+  }
 
   async signup(newUser: any) {
     const result = await this.auth.createUserWithEmailAndPassword(
@@ -23,14 +40,6 @@ export class AuthService {
       newUser.password
     );
     if (result.user) {
-      this.sessionService.save('uid', result.user.uid);
-      const user: User = {
-        userid: result.user.uid,
-        fname: newUser.fname,
-        lname: newUser.lname,
-        email: newUser.email,
-      };
-
       const budget: Budget = {
         budgetId: this.db.database.ref('budgets').push().key!,
         name: 'Budget',
@@ -39,7 +48,7 @@ export class AuthService {
         end_date: '',
         remaining_amount: 0,
       };
-      await this.userService.createUser(user);
+
       await this.db
         .object(`budgets/${result.user.uid}/${budget.budgetId}`)
         .set(budget);
@@ -50,12 +59,10 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const result = await this.auth.signInWithEmailAndPassword(email, password);
-    result.user && this.sessionService.save('uid', result.user.uid);
+    await this.auth.signInWithEmailAndPassword(email, password);
   }
 
   async logout() {
     await this.auth.signOut();
-    this.sessionService.clear();
   }
 }

@@ -5,9 +5,22 @@
         </div>
         <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
             <div class="max-w-md mx-auto">
-                <div>
-                    <h2 class="text-2xl font-semibold">Budget Tracker</h2>
-                    <h1 class="text-xl font-thin">Welcome, {{ currentUser?.fname }} </h1>
+                <div class="header">
+                    <div>
+                        <h2 class="text-2xl font-semibold">Budget Tracker</h2>
+                        <h1 class="text-xl font-thin">Welcome, {{ currentUser?.fname }} </h1>
+                    </div>
+                    <div class="mt-10">
+                        <label for="budgetSelect" class="block text-sm font-medium text-gray-700">Select a
+                            budget</label>
+                        <select id="budgetSelect" name="budgetSelect"
+                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            [(ngModel)]="selectedBudgetId" (change)="changeSelectedBudget($event)">
+                            <option value="" disabled>Select a budget</option>
+                            <option *ngFor="let budget of budgets$ | async" [value]="budget.budgetId">{{ budget.name }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
                 <div class="divide-y divide-gray-200">
                     <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
