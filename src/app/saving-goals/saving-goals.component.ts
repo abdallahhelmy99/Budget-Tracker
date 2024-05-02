@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SavingGoalService } from '../services/SavingGoalService/savinggoal.service';
 import { SavingGoal } from '../models/SavingGoalModel/savinggoal.model';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 
 @Component({
   selector: 'app-saving-goals',
@@ -8,37 +9,60 @@ import { SavingGoal } from '../models/SavingGoalModel/savinggoal.model';
   styleUrls: ['./saving-goals.component.css'],
 })
 export class SavingGoalsComponent implements OnInit {
-  name: string = '';
-  amount: number = 0;
-  target_date: Date = new Date();
-  current_amount: number = 0;
   savingGoals: SavingGoal[] = [];
+  newGoal: SavingGoal = {
+    savingGoalId: '',
+    name: '',
+    amount: 0,
+    target_date: '',
+    current_amount: 0,
+  };
+  editingSavingGoalId: string | null = null;
 
-  constructor(private savingGoalService: SavingGoalService) {}
+  constructor(
+    private savingGoalService: SavingGoalService,
+    private db: AngularFireDatabase
+  ) {}
 
   ngOnInit() {
     this.getSavingGoals();
   }
 
-  async getSavingGoals() {
-    this.savingGoals =
-      (await this.savingGoalService.getSavingGoals().toPromise()) ?? [];
+  getSavingGoals() {
+    this.savingGoalService.getSavingGoals().subscribe((savingGoals) => {
+      this.savingGoals = savingGoals;
+    });
   }
 
   async createSavingGoal() {
     const savingGoal: SavingGoal = {
-      savingGoalId: '',
-      name: this.name,
-      amount: this.amount,
-      target_date: this.target_date.toISOString(),
+      savingGoalId: this.db.database.ref('savingGoals').push().key!,
+      name: this.newGoal.name,
+      amount: this.newGoal.amount,
+      target_date: this.newGoal.target_date.toString(),
       current_amount: 0,
     };
     await this.savingGoalService.createSavingGoal(savingGoal);
     this.getSavingGoals();
   }
 
-  editSavingGoal(savingGoal: SavingGoal) {
-    // Implement the logic for editing a saving goal
+  async updateSavingGoal() {
+    if (this.newGoal.savingGoalId) {
+      await this.savingGoalService.updateSavingGoal(this.newGoal);
+      this.newGoal = {
+        savingGoalId: '',
+        name: '',
+        amount: 0,
+        target_date: '',
+        current_amount: 0,
+      };
+      this.getSavingGoals();
+    }
+  }
+
+  editSavingGoal(goal: SavingGoal) {
+    this.newGoal = { ...goal };
+    this.editingSavingGoalId = goal.savingGoalId;
   }
 
   async deleteSavingGoal(savingGoalId: string) {

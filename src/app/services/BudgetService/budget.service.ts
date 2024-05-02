@@ -71,8 +71,9 @@ export class BudgetService {
 
   changeSelectedBudget(budgetId: string) {
     this.selectedBudgetId.next(budgetId);
-    // Save the selected budget ID to local storage
-    localStorage.setItem('selectedBudget', budgetId);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('selectedBudget', budgetId);
+    }
     console.log(
       'Selected budget ID updated:',
       this.selectedBudgetId.getValue()

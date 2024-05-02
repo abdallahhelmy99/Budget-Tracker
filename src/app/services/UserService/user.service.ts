@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { User } from '../../models/UserModel/user.model';
 import { Observable, from, switchMap } from 'rxjs';
-import { SessionStorageService } from '../SessionStorageService/session.service';
 import { AuthService } from '../AuthService/auth.service';
 
 /**

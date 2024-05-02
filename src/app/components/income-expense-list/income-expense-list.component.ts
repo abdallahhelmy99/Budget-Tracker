@@ -1,6 +1,5 @@
 // income-expense-list.component.ts
 import { Component, OnInit } from '@angular/core';
-import { SessionStorageService } from '../../services/SessionStorageService/session.service';
 import { ExpenseService } from '../../services/ExpenseService/expense.service';
 import { IncomeService } from '../../services/IncomeService/income.service';
 import { Expense } from '../../models/ExpenseModel/expense.model';
