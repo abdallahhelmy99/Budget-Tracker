@@ -33,22 +33,44 @@
                         </ul>
                     </div>
                     <div class="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
-                        <!-- <h3 class="text-lg font-semibold">{{editingSavingGoalId ? 'Edit saving goal:' : 'Create a new saving goal:'}}</h3> -->
-                        <!-- <form (ngSubmit)="saveSavingGoal()">
+                        <h3 class="text-lg font-semibold">{{editingSavingGoalId ? 'Edit saving goal:' : 'Create a new
+                            saving goal:'}}</h3>
+                        <form (ngSubmit)="editingSavingGoalId ? updateSavingGoal() : createSavingGoal()">
                             <div class="mb-4">
-                                <label for="goalName" class="block text-gray-700 text-sm font-bold mb-2">Goal Name:</label>
-                                <input type="text" id="goalName" [(ngModel)]="newGoal.name" name="goalName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <label for="goalName" class="block text-gray-700 text-sm font-bold mb-2">Goal
+                                    Name:</label>
+                                <input type="text" id="goalName" [(ngModel)]="newGoal.name" name="goalName"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </div>
                             <div class="mb-6">
-                                <label for="goalAmount" class="block text-gray-700 text-sm font-bold mb-2">Goal Amount:</label>
-                                <input type="number" id="goalAmount" [(ngModel)]="newGoal.amount" name="goalAmount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <label for="goalAmount" class="block text-gray-700 text-sm font-bold mb-2">Goal
+                                    Amount:</label>
+                                <input type="number" id="goalAmount" [(ngModel)]="newGoal.amount" name="goalAmount"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             </div>
+                            <div class="mb-4">
+                                <label for="targetDate" class="block text-gray-700 text-sm font-bold mb-2">Target
+                                    Date:</label>
+                                <input type="date" id="targetDate" [(ngModel)]="newGoal.target_date" name="targetDate"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-6">
+                                <label for="currentAmount" class="block text-gray-700 text-sm font-bold mb-2">Current
+                                    Amount:</label>
+                                <input type="number" id="currentAmount" [(ngModel)]="newGoal.current_amount"
+                                    name="currentAmount"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+
+
                             <div class="flex items-center justify-between">
-                                <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                                <button
+                                    class="bg-cyan-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    type="submit">
                                     {{editingSavingGoalId ? 'Save Changes' : 'Create Goal'}}
                                 </button>
                             </div>
-                        </form> -->
+                        </form>
                     </div>
                 </div>
             </div>

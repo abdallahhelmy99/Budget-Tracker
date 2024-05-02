@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from '../../models/UserModel/user.model';
-import { SessionStorageService } from '../SessionStorageService/session.service';
-import { UserService } from '../UserService/user.service';
 import { Budget } from '../../models/BudgetModel/budget.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -32,6 +30,18 @@ export class AuthService {
         reject
       );
     });
+  }
+
+  async getCurrentUser(): Promise<User | null> {
+    const userId = await this.getCurrentUserId();
+    if (userId) {
+      return (await this.db
+        .object(`users/${userId}`)
+        .valueChanges()
+        .toPromise()) as Promise<User>;
+    } else {
+      return null;
+    }
   }
 
   async signup(newUser: any) {

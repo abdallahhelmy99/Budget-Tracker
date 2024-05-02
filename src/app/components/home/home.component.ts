@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/UserService/user.service';
 import { AuthService } from '../../services/AuthService/auth.service';
-import { SessionStorageService } from '../../services/SessionStorageService/session.service';
 import { User } from '../../models/UserModel/user.model';
 import { Observable } from 'rxjs';
 import { Budget } from '../../models/BudgetModel/budget.model';
@@ -29,7 +28,10 @@ export class HomeComponent {
   }
 
   ngOnInit(): void {
-    const selectedBudget = localStorage.getItem('selectedBudget');
+    let selectedBudget;
+    if (typeof localStorage !== 'undefined') {
+      selectedBudget = localStorage.getItem('selectedBudget');
+    }
     if (selectedBudget) {
       this.budgetService.changeSelectedBudget(selectedBudget);
     }
@@ -52,7 +54,9 @@ export class HomeComponent {
     const value = selectElement.value;
     if (value) {
       this.budgetService.changeSelectedBudget(value);
-      localStorage.setItem('selectedBudget', value);
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('selectedBudget', value);
+      }
     }
   }
 }
