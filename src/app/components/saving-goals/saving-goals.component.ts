@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SavingGoalService } from '../services/SavingGoalService/savinggoal.service';
-import { SavingGoal } from '../models/SavingGoalModel/savinggoal.model';
+import { SavingGoal } from '../../models/SavingGoalModel/savinggoal.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { SavingGoalService } from '../../services/SavingGoalService/savinggoal.service';
 
 @Component({
   selector: 'app-saving-goals',
