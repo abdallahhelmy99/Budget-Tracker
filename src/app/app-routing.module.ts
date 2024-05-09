@@ -7,6 +7,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegisterComponent } from './components/register/register.component';
 import { BudgetManagementComponent } from './budget-management/budget-management.component';
 import { SavingGoalsComponent } from './saving-goals/saving-goals.component';
+import { FinancialReportingComponent } from './components/financial-reporting/financial-reporting.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'budget', component: BudgetManagementComponent },
   { path: 'savinggoal', component: SavingGoalsComponent },
+  {path: 'financialreporting', component: FinancialReportingComponent},
 ];
 
 @NgModule({
