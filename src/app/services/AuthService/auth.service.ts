@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from '../../models/UserModel/user.model';
-import { Budget } from '../../models/BudgetModel/budget.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private auth: AngularFireAuth, private db: AngularFireDatabase) {}
+  constructor(
+    private auth: AngularFireAuth,
+    private db: AngularFireDatabase,
+    private router: Router
+  ) {}
 
   getCurrentUserId(): Promise<string | null> {
     const auth = getAuth();
@@ -18,12 +22,9 @@ export class AuthService {
         auth,
         (user) => {
           if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/auth.user
             const uid = user.uid;
             resolve(uid);
           } else {
-            // User is signed out
             resolve(null);
           }
         },
@@ -69,5 +70,15 @@ export class AuthService {
 
   async logout() {
     await this.auth.signOut();
+  }
+
+  async canActivate(): Promise<boolean> {
+    const userIsLoggedIn = await this.getCurrentUserId();
+    console.log('User is logged in:', userIsLoggedIn);
+    if (!userIsLoggedIn || userIsLoggedIn === null) {
+      this.router.navigate(['']);
+      return false;
+    }
+    return true;
   }
 }

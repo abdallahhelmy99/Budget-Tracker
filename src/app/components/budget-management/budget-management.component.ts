@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { BudgetService } from '../services/BudgetService/budget.service';
-import { Budget } from '../models/BudgetModel/budget.model';
+import { Budget } from '../../models/BudgetModel/budget.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { BudgetService } from '../../services/BudgetService/budget.service';
 
 @Component({
   selector: 'app-budget-management',
