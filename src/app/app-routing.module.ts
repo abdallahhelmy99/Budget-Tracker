@@ -5,8 +5,8 @@ import { LoginComponent } from './components/login/login.component';
 import { TrackingPageComponent } from './components/tracking-page/tracking-page.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegisterComponent } from './components/register/register.component';
-import { BudgetManagementComponent } from './budget-management/budget-management.component';
-import { SavingGoalsComponent } from './saving-goals/saving-goals.component';
+import { SavingGoalsComponent } from './components/saving-goals/saving-goals.component';
+import { BudgetManagementComponent } from './components/budget-management/budget-management.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
