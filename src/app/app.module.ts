@@ -23,6 +23,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BudgetManagementComponent } from './budget-management/budget-management.component';
 import { SavingGoalsComponent } from './saving-goals/saving-goals.component';
+import { FinancialReportingComponent } from './components/financial-reporting/financial-reporting.component';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyApLtsOeQvx2_HdGvsw4jY1GqIb5ufHb90',
@@ -46,6 +47,7 @@ const firebaseConfig = {
     RegisterComponent,
     BudgetManagementComponent,
     SavingGoalsComponent,
+    FinancialReportingComponent,
   ],
   imports: [
     BrowserModule,
