@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrackingPageComponent } from './components/tracking-page/tracking-page.component';
 import { IncomeExpenseListComponent } from './components/income-expense-list/income-expense-list.component';
 import { AddComponent } from './components/add/add.component';
@@ -57,6 +57,7 @@ const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     provideClientHydration(),

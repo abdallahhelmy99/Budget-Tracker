@@ -1,34 +1,59 @@
-// register.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../services/AuthService/auth.service';
-import { uid } from 'chart.js/dist/helpers/helpers.core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent {
-  newUser = {
-    uid: '',
-    fname: '',
-    lname: '',
-    email: '',
-    password: '',
-  };
+export class RegisterComponent implements OnInit {
+  registerForm: FormGroup | any;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.registerForm = new FormGroup({
+      uid: new FormControl(''),
+      fname: new FormControl('', Validators.required),
+      lname: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+    });
+  }
 
   register() {
-    this.authService.signup(this.newUser).then(
-      (user) => {
-        console.log('User registered:', user);
-      },
-      (error) => {
-        console.error('Error in registration:', error);
-      }
-    );
+    if (this.registerForm.valid) {
+      this.authService.signup(this.registerForm.value).then(
+        (user) => {
+          console.log('User registered:', user);
+          this.snackBar.open('Registration successful', 'Close', {
+            duration: 3000,
+          });
+        },
+        (error) => {
+          console.error('Error in registration:', error);
+          this.snackBar.open(
+            'Error in registration: ' + error.message,
+            'Close',
+            {
+              duration: 3000,
+            }
+          );
+        }
+      );
+    } else {
+      console.error('Form is not valid');
+      this.snackBar.open('Form is not valid', 'Close', {
+        duration: 3000,
+      });
+    }
   }
 }
