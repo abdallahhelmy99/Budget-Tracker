@@ -12,20 +12,20 @@
                 </div>
                 <div class="divide-y divide-gray-200">
                     <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                        <form (ngSubmit)="login()">
+                        <form [formGroup]="loginForm" (ngSubmit)="login()">
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                                     Email
                                 </label>
-                                <input [(ngModel)]="email" name="email"
+                                <input iname="email" formControlName="email" required
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="email" type="text" placeholder="Email">
+                                    id="email" type="email" placeholder="Email">
                             </div>
                             <div class="mb-6">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
                                     Password
                                 </label>
-                                <input [(ngModel)]="password" name="password"
+                                <input formControlName="password" name="password"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                     id="password" type="password" placeholder="******************">
                             </div>

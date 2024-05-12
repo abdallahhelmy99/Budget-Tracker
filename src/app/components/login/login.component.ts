@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/AuthService/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -10,8 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  email = '';
-  password = '';
+  loginForm: FormGroup = new FormGroup({});
 
   constructor(
     private router: Router,
@@ -19,15 +19,29 @@ export class LoginComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loginForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+    });
+  }
 
   async login() {
-    try {
-      await this.authService.login(this.email, this.password);
-      this.snackBar.open('Login successful', 'Close', { duration: 3000 });
-      this.router.navigate(['/home']);
-    } catch (error) {
-      this.snackBar.open('Invalid username or password', 'Close', {
+    if (this.loginForm.valid) {
+      try {
+        await this.authService.login(
+          this.loginForm.value.email,
+          this.loginForm.value.password
+        );
+        this.snackBar.open('Login Successful', 'Close', { duration: 3000 });
+        this.router.navigate(['/home']);
+      } catch (error) {
+        this.snackBar.open('Incorrect Email or Password', 'Close', {
+          duration: 3000,
+        });
+      }
+    } else {
+      this.snackBar.open('Invalid Email or Password', 'Close', {
         duration: 3000,
       });
     }
